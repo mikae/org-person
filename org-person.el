@@ -19,22 +19,30 @@
     (error "`org-person-directory' is not setup")))
 
 ;; Public
-(defun org-person-new (person-id)
+(defun org-person-new (&optional person-id)
   "Create new person."
-  (interactive "bPerson identifier: ")
-  (org-person--try-setup)
-  (f-mkdir (f-join org-person-directory
-                   person-id))
-  (find-file (f-join org-person-directory
-                     person-id
-                     "person.org")))
+  (interactive)
+  (let ((--person-id (or person-id
+                         (read-string "Person identifier: "))))
+    (when (string= --person-id
+                   "")
+      (error "Person with empty identifier is not allowed."))
+    (org-person--try-setup)
+    (f-mkdir (f-join org-person-directory
+                     --person-id))
+    (find-file (f-join org-person-directory
+                       --person-id
+                       "person.org"))))
 
 (defun org-person-open (person-id)
   "Find a file with PERSON-ID."
   (unless (f-dir-p org-person-directory)
     (error "`org-person-directory' is not setup"))
-  (unless (f-dir-p (f-join org-person-directory
-                           person-id))
+  (unless (or (f-dir-p (f-join org-person-directory
+                               person-id))
+              (f-file-p (f-join org-person-directory
+                                person-id
+                                "person.org")))
     (error "There is no person with person-id: %s" person-id))
   (find-file (f-join org-person-directory
                      person-id
