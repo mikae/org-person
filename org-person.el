@@ -21,6 +21,7 @@
 ;; Public
 (defun org-person-new (person-id)
   "Create new person."
+  (interactive)
   (org-person--try-setup)
   (f-mkdir (f-join org-person-directory
                    person-id))
@@ -30,6 +31,7 @@
 
 (defun org-person-open (person-id)
   "Find a file with PERSON-ID."
+  (interactive)
   (unless (f-dir-p org-person-directory)
     (error "`org-person-directory' is not setup"))
   (unless (f-dir-p (f-join org-person-directory
