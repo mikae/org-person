@@ -22,20 +22,22 @@
 (defun org-person-new (person-id)
   "Create new person."
   (org-person--try-setup)
+  (f-mkdir (f-join org-person-directory
+                   person-id))
   (find-file (f-join org-person-directory
-                     (org-person--create-file-name person-id))))
+                     person-id
+                     "person.org")))
 
 (defun org-person-open (person-id)
   "Find a file with PERSON-ID."
   (unless (f-dir-p org-person-directory)
     (error "`org-person-directory' is not setup"))
-  (unless (f-file-p (f-join org-person-directory
-                            (org-person--create-file-name person-id)))
+  (unless (f-dir-p (f-join org-person-directory
+                           person-id))
     (error "There is no person with person-id: %s" person-id))
   (find-file (f-join org-person-directory
-                     (org-person--create-file-name person-id))))
-
-
+                     person-id
+                     "person.org")))
 
 (provide 'org-person)
 ;;; org-person.el ends here

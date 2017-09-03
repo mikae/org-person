@@ -30,19 +30,22 @@
                         (expect (f-dir-p --org-person-directory)
                                 :to-be t)))
 
-          (describe "Creates files"
+          (describe "Creates person directories"
                     (before-each
                      (--clear)
                      (--setup))
 
-                    (it "creates new file with person's info"
+                    (it "creates new dir with person's info"
                         (--setup)
                         (org-person-new "test")
                         (save-buffer)
                         (kill-buffer)
+                        (expect (f-dir-p (f-join --org-person-directory
+                                                 "test")))
                         (expect (f-file-p (f-join --org-person-directory
-                                                  "person-test.org"))))
-                    (it "creates multiple files with persons' infos"
+                                                  "test"
+                                                  "person.org"))))
+                    (it "creates multiple directories with persons' infos"
                         (--setup)
                         (org-person-new "test-1")
                         (save-buffer)
@@ -50,10 +53,16 @@
                         (org-person-new "test-2")
                         (save-buffer)
                         (kill-buffer)
+                        (expect (f-dir-p (f-join --org-person-directory
+                                                 "test-1")))
                         (expect (f-file-p (f-join --org-person-directory
-                                                  "person-test-1.org")))
+                                                  "test-1"
+                                                  "person.org")))
+                        (expect (f-dir-p (f-join --org-person-directory
+                                                 "test-2")))
                         (expect (f-file-p (f-join --org-person-directory
-                                                  "person-test-2.org"))))))
+                                                  "test-2"
+                                                  "person.org"))))))
 
 (describe "Open person."
           (describe "Throws errors"
@@ -75,4 +84,5 @@
               (org-person-open "test")
               (expect buffer-file-name
                       :to-equal (f-join org-person-directory
-                                        "person-test.org"))))
+                                        "test"
+                                        "person.org"))))
