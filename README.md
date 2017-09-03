@@ -1,2 +1,2 @@
 # org-person
-Don't install me pls
+Don't install me, pls.
